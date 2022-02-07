@@ -52,9 +52,12 @@ describe('lazy-bouncer routes', () => {
   it('returns the current user', async () => {
     const [agent, user] = await registerAndLogin();
     const me = await agent.get('/api/v1/users/me');
-
+  
     expect(me.body).toEqual({
-      ...user.toJSON(),
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
       exp: expect.any(Number),
       iat: expect.any(Number),
     });
@@ -79,10 +82,10 @@ describe('lazy-bouncer routes', () => {
     });
   });
 
-  it('should return a list of users if signed in as admin', async () => {
+  it.only('should return a list of users if signed in as admin', async () => {
     const [agent, user] = await registerAndLogin({ email: 'admin' });
     const res = await agent.get('/api/v1/users');
 
-    expect(res.body).toEqual([user.toJSON()]);
+    expect(res.body).toEqual({ ...user });
   });
 });
