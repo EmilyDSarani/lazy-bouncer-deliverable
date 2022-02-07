@@ -86,6 +86,6 @@ describe('lazy-bouncer routes', () => {
     const [agent, user] = await registerAndLogin({ email: 'admin' });
     const res = await agent.get('/api/v1/users');
 
-    expect(res.body).toEqual({ ...user });
+    expect(res.body).toEqual([{ ...user }]);
   });
 });
