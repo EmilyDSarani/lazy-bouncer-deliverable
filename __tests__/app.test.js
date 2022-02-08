@@ -52,9 +52,12 @@ describe('lazy-bouncer routes', () => {
   it('returns the current user', async () => {
     const [agent, user] = await registerAndLogin();
     const me = await agent.get('/api/v1/users/me');
-
+  
     expect(me.body).toEqual({
-      ...user.toJSON(),
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
       exp: expect.any(Number),
       iat: expect.any(Number),
     });
@@ -72,7 +75,6 @@ describe('lazy-bouncer routes', () => {
   it('should return a 403 when signed in but not admin and listing all users', async () => {
     const [agent] = await registerAndLogin();
     const res = await agent.get('/api/v1/users');
-
     expect(res.body).toEqual({
       message: 'You do not have access to view this page',
       status: 403,
@@ -83,6 +85,6 @@ describe('lazy-bouncer routes', () => {
     const [agent, user] = await registerAndLogin({ email: 'admin' });
     const res = await agent.get('/api/v1/users');
 
-    expect(res.body).toEqual([user.toJSON()]);
+    expect(res.body).toEqual([{ ...user }]);
   });
 });
